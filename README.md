@@ -26,7 +26,7 @@ Open [http://localhost:3333](http://localhost:3333).
 2. Or drag and drop video files directly onto the drop zone
 3. Click a file to preview the original
 4. Adjust settings if needed
-5. Click **Оптимізувати** — progress is shown in real time
+5. Click **Optimize** — progress is shown in real time
 6. When done, the optimized video appears in the right panel for comparison
 7. Switch between MP4 / WebM previews using the format buttons
 
