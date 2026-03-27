@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Optimizer</title>
+    <link rel="stylesheet" href="main.css" />
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- ── SIDEBAR ── -->
+      <aside class="sidebar">
+        <div class="sidebar-head">
+          <div class="logo">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="white">
+              <polygon points="3,1.5 10.5,6 3,10.5" />
+            </svg>
+          </div>
+          <h1>Video Optimizer</h1>
+        </div>
+
+        <div class="dir-section">
+          <div class="section-label">Directory</div>
+          <div class="dir-row">
+            <input
+              class="dir-input"
+              id="dirInput"
+              type="text"
+              placeholder="/path/to/videos"
+              spellcheck="false"
+            />
+            <button class="btn-sm" onclick="loadDir()" title="Load">
+              ↵
+            </button>
+          </div>
+        </div>
+
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-icon">⊕</div>
+          <div>Drop video or click</div>
+          <input type="file" id="fileInput" accept="video/*" multiple />
+        </div>
+
+        <div class="file-list-head">
+          <span class="section-label" style="margin: 0">Files</span>
+          <span class="badge" id="fileCount">0</span>
+        </div>
+        <div class="file-list" id="fileList">
+          <div class="list-empty" id="listEmpty">
+            Select a directory<br />or drop files
+          </div>
+        </div>
+
+        <div class="settings-wrap">
+          <div class="settings-toggle" onclick="toggleSettings()">
+            <span class="section-label" style="margin: 0">Settings</span>
+            <span class="toggle-arrow" id="toggleArrow">▼</span>
+          </div>
+          <div class="settings-body" id="settingsBody">
+            <div class="sg">
+              <div class="sg-label">Output formats</div>
+              <label class="chk-row"
+                ><input type="checkbox" id="genCover" checked /><span
+                  class="chk-label"
+                  >Cover JPG</span
+                ></label
+              >
+              <label class="chk-row"
+                ><input type="checkbox" id="genWebm" checked /><span
+                  class="chk-label"
+                  >WebM</span
+                ></label
+              >
+              <label class="chk-row"
+                ><input type="checkbox" id="genMp4" checked /><span
+                  class="chk-label"
+                  >MP4</span
+                ></label
+              >
+            </div>
+
+            <div class="sg" id="sgMp4">
+              <div class="sg-label">MP4</div>
+              <div class="slider-row">
+                <span class="slider-label">CRF (quality)</span>
+                <span class="slider-val" id="mp4CrfVal">28</span>
+                <i
+                  class="tip"
+                  data-tip="Constant Rate Factor — controls quality.&#10;Lower = better quality, larger file.&#10;Higher = worse quality, smaller file.&#10;&#10;Recommended: 18–28&#10;(default: 28)"
+                  >?</i
+                >
+              </div>
+              <input
+                type="range"
+                id="mp4Crf"
+                min="0"
+                max="51"
+                value="28"
+                oninput="
+                  document.getElementById('mp4CrfVal').textContent = this.value
+                "
+              />
+              <div class="slider-row">
+                <span class="slider-label">Preset</span
+                ><i
+                  class="tip"
+                  data-tip="Encoding speed vs file size.&#10;Does not affect visual quality.&#10;&#10;ultrafast — fast, larger file&#10;medium — balanced (default)&#10;veryslow — slow, smaller file"
+                  >?</i
+                >
+              </div>
+              <select id="mp4Preset">
+                <option>ultrafast</option>
+                <option>superfast</option>
+                <option>veryfast</option>
+                <option>faster</option>
+                <option>fast</option>
+                <option selected>medium</option>
+                <option>slow</option>
+                <option>slower</option>
+                <option>veryslow</option>
+              </select>
+            </div>
+
+            <div class="sg" id="sgWebm" style="margin-top: 10px">
+              <div class="sg-label">WebM</div>
+              <div class="slider-row">
+                <span class="slider-label"
+                  >CRF (quality):</span
+                >
+                <span class="slider-val" id="webmCrfVal">4</span>
+                <i
+                    class="tip"
+                    data-tip="Constant Rate Factor — controls quality.&#10;Lower = better quality, larger file.&#10;Higher = worse quality, smaller file.&#10;&#10;Range: 0–25 (qmax=25)&#10;Recommended: 4–10&#10;(default: 4)"
+                    >?</i
+                  >
+              </div>
+              <input
+                type="range"
+                id="webmCrf"
+                min="0"
+                max="25"
+                value="4"
+                oninput="
+                  document.getElementById('webmCrfVal').textContent = this.value
+                "
+              />
+              <div class="slider-row" style="margin-top: 4px">
+                <span class="slider-label"
+                  >Bitrate</span
+                >
+                <i
+                    class="tip"
+                    data-tip="Upper bitrate limit (bit/s).&#10;Constrains file size on complex scenes.&#10;&#10;1M — web, 720p and below&#10;2M–4M — for 1080p&#10;0 — no limit (CRF only)"
+                    >?</i
+                  >
+              </div>
+              <div class="bitrate-row">
+                <input type="number" class="s-text bitrate-num" id="webmBitrateVal" value="1" min="1" step="1" />
+                <select id="webmBitrateUnit" onchange="onBitrateUnitChange()">
+                  <option value="M" selected>M</option>
+                  <option value="K">K</option>
+                  <option value="">—</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ── ORIGINAL PANEL ── -->
+      <section class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Original</span>
+          <span class="panel-size" id="origSize"></span>
+        </div>
+        <div class="video-wrap">
+          <video id="origVideo" preload="metadata"></video>
+          <div class="empty-state" id="origEmpty">
+            <div class="empty-icon">🎬</div>
+            <div class="empty-text">Select a video from the list</div>
+          </div>
+        </div>
+        <div class="panel-foot">
+          <div class="fname-footer" id="origName"></div>
+        </div>
+      </section>
+
+      <!-- ── OPTIMIZED PANEL ── -->
+      <section class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Optimized</span>
+          <span class="panel-size" id="optSize"></span>
+        </div>
+        <div class="video-wrap">
+          <video id="optVideo" preload="metadata"></video>
+          <div class="empty-state" id="optEmpty">
+            <div class="empty-icon">✨</div>
+            <div class="empty-text" id="optEmptyText">
+              Click Optimize
+            </div>
+          </div>
+        </div>
+        <div class="panel-foot">
+          <div class="err-msg" id="errMsg"></div>
+          <div class="prog-wrap" id="progWrap">
+            <div class="prog-info">
+              <span class="prog-step" id="progStep">—</span>
+              <span class="prog-pct" id="progPct">0%</span>
+            </div>
+            <div class="prog-track">
+              <div class="prog-fill" id="progFill"></div>
+            </div>
+          </div>
+          <div class="result-links" id="resultLinks"></div>
+          <button
+            class="btn-optimize"
+            id="optBtn"
+            onclick="startOptimize()"
+            disabled
+          >
+            Optimize
+          </button>
+        </div>
+      </section>
+
+      <!-- ── PLAYBACK BAR ── -->
+      <div class="playback-bar">
+        <button class="play-btn" id="playBtn" disabled title="Space">▶</button>
+        <input type="range" class="scrubber" id="scrubber" min="0" max="1" value="0" step="0.001" disabled />
+        <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+      </div>
+    </div>
+  </body>
+</html>
