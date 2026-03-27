@@ -29,6 +29,7 @@ interface OptimizeSettings {
   genCover: boolean;
   genWebm: boolean;
   genMp4: boolean;
+  removeAudio: boolean;
   mp4Crf: number;
   mp4Preset: string;
   webmCrf: number;
@@ -290,6 +291,7 @@ async function runOptimization(
   const genCover = settings.genCover !== false;
   const genWebm = settings.genWebm !== false;
   const genMp4 = settings.genMp4 !== false;
+  const removeAudio = settings.removeAudio !== false;
 
   type Step = { label: string; args: string[] };
   const steps: Step[] = [];
@@ -310,7 +312,7 @@ async function runOptimization(
         "-qmin", "0", "-qmax", "25",
         "-crf", String(webmCrf),
         "-b:v", webmBitrate,
-        "-an", "-threads", "0",
+        ...(removeAudio ? ["-an"] : []), "-threads", "0",
         webmPath,
       ],
     });
@@ -325,7 +327,7 @@ async function runOptimization(
         "-pix_fmt", "yuv420p",
         "-crf", String(mp4Crf),
         "-preset", mp4Preset,
-        "-an", "-movflags", "+faststart",
+        ...(removeAudio ? ["-an"] : []), "-movflags", "+faststart",
         mp4Path,
       ],
     });

@@ -39,6 +39,7 @@ Optimized files are saved to an `optimized/` subdirectory inside the source dire
 | **Cover JPG** | Extract first frame as a JPEG thumbnail |
 | **WebM** | Convert using libvpx |
 | **MP4** | Convert using libx264 with faststart |
+| **Remove audio** | Strip audio track from output files (on by default) |
 | **CRF (MP4)** | Quality: 0 = lossless, 51 = worst. Recommended: 18–28 |
 | **Preset (MP4)** | Encoding speed vs file size. `medium` is a good default |
 | **CRF (WebM)** | Quality: 0–25 (capped by qmax=25). Recommended: 4–10 |

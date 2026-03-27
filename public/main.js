@@ -284,6 +284,7 @@ function getSettings() {
     genCover: document.getElementById("genCover").checked,
     genWebm: document.getElementById("genWebm").checked,
     genMp4: document.getElementById("genMp4").checked,
+    removeAudio: document.getElementById("removeAudio").checked,
     mp4Crf: parseInt(document.getElementById("mp4Crf").value),
     mp4Preset: document.getElementById("mp4Preset").value,
     webmCrf: parseInt(document.getElementById("webmCrf").value),
