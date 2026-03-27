@@ -303,6 +303,9 @@ document.getElementById("genMp4").addEventListener("change", (e) => {
 document.getElementById("genWebm").addEventListener("change", (e) => {
   document.getElementById("sgWebm").style.opacity = e.target.checked ? "1" : ".3";
 });
+document.getElementById("removeAudio").addEventListener("change", () => {
+  updateAudioMute();
+});
 
 // ── Drag & Drop ──────────────────────────────────────────────────────────────
 
@@ -396,6 +399,12 @@ function updatePlayIcon() {
   playBtn.textContent = orig.paused ? "▶" : "⏸";
 }
 
+function updateAudioMute() {
+  const removeAudio = document.getElementById("removeAudio").checked;
+  document.getElementById("origVideo").muted = true;
+  document.getElementById("optVideo").muted = removeAudio;
+}
+
 const origVideo = document.getElementById("origVideo");
 
 origVideo.addEventListener("loadedmetadata", () => {
@@ -452,6 +461,7 @@ scrubber.addEventListener("input", () => {
 // ── Init ─────────────────────────────────────────────────────────────────────
 
 toggleSettings();
+updateAudioMute();
 
 (async () => {
   try {
