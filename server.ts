@@ -116,7 +116,11 @@ app.get("/api/serve", (req: Request, res: Response) => {
   if (!filePath) return void res.status(400).json({ error: "No path" });
   if (!fs.existsSync(filePath)) return void res.status(404).json({ error: "File not found" });
 
-  res.sendFile(path.resolve(filePath));
+  res.sendFile(path.resolve(filePath), (err) => {
+    if (err && !res.headersSent) {
+      res.status((err as NodeJS.ErrnoException & { status?: number }).status ?? 500).end();
+    }
+  });
 });
 
 // Check existing optimized files for a given source file

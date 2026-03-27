@@ -126,7 +126,7 @@ function showResult(results) {
   links.classList.add("visible");
 
   if (firstPath) {
-    video.src = `/api/serve?path=${encodeURIComponent(firstPath)}`;
+    video.src = serveUrl(firstPath);
     video.classList.add("visible");
     empty.classList.add("hidden");
     firstLink.classList.add("active");
@@ -143,7 +143,7 @@ function mkLink(label, filePath) {
   el.addEventListener("click", () => {
     document.querySelectorAll(".rlink").forEach((l) => l.classList.remove("active"));
     el.classList.add("active");
-    document.getElementById("optVideo").src = `/api/serve?path=${encodeURIComponent(filePath)}`;
+    document.getElementById("optVideo").src = serveUrl(filePath);
     document.getElementById("optSize").textContent = `${label} · …`;
     fetchSize(filePath).then((s) => {
       if (s) document.getElementById("optSize").textContent = `${label} · ${fmtSize(s)}`;
@@ -351,6 +351,10 @@ async function uploadFiles(files) {
 }
 
 // ── Utils ────────────────────────────────────────────────────────────────────
+
+function serveUrl(filePath) {
+  return `/api/serve?path=${encodeURIComponent(filePath)}&t=${Date.now()}`;
+}
 
 function fmtSize(b) {
   if (b < 1024) return b + " B";
