@@ -3,3 +3,5 @@ dist/
 uploads/
 optimized/
 *.js.map
+.DS_Store
+public/main.js
