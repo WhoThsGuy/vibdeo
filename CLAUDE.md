@@ -21,17 +21,19 @@ Local video optimization tool with a web UI. Express backend + vanilla JS fronte
 ## Stack
 
 - **Server**: `server.ts` — Express, runs via `tsx`
-- **Frontend**: `public/index.html` + `public/main.css` + `public/main.js`
-- **Runtime**: `npm start` → `tsx server.ts` → http://localhost:3333
+- **Frontend**: `src/main.ts` → compiled to `public/main.js` via `tsc`
+- **Runtime**: `npm start` → compiles client TS, then starts server → http://localhost:3333
+- **Dev**: `npm run dev` → `tsc --watch` + `tsx watch` in parallel
 
 ## Key files
 
-| File                | Purpose                                    |
-| ------------------- | ------------------------------------------ |
-| `server.ts`         | Express API, ffmpeg spawning, SSE progress |
-| `public/index.html` | HTML markup only                           |
-| `public/main.css`   | All styles                                 |
-| `public/main.js`    | All frontend logic                         |
+| File                | Purpose                                          |
+| ------------------- | ------------------------------------------------ |
+| `server.ts`         | Express API, ffmpeg spawning, SSE progress       |
+| `src/main.ts`       | All frontend logic (TypeScript source)           |
+| `public/index.html` | HTML markup only                                 |
+| `public/main.css`   | All styles                                       |
+| `public/main.js`    | Compiled frontend — do not edit directly         |
 
 ## API
 

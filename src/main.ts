@@ -109,7 +109,6 @@ async function selectFile(file: VideoFile) {
     ? `${ext} · ${fmtSize(file.size)}`
     : fmtSize(file.size)
   document.getElementById('origName')!.textContent = file.name
-
   ;(document.getElementById('optBtn') as HTMLButtonElement).disabled =
     isOptimizing
   resetOptPanel()
@@ -184,7 +183,8 @@ function showResult(results: OptimizeResult) {
     firstLink.classList.add('active')
     fetchSize(path).then(s => {
       if (s)
-        document.getElementById('optSize')!.textContent = `${label} · ${fmtSize(s)}`
+        document.getElementById('optSize')!.textContent =
+          `${label} · ${fmtSize(s)}`
     })
   }
 }
@@ -203,7 +203,8 @@ function mkLink(label: string, filePath: string): HTMLElement {
     document.getElementById('optSize')!.textContent = `${label} · …`
     fetchSize(filePath).then(s => {
       if (s)
-        document.getElementById('optSize')!.textContent = `${label} · ${fmtSize(s)}`
+        document.getElementById('optSize')!.textContent =
+          `${label} · ${fmtSize(s)}`
     })
   })
   return el
@@ -222,10 +223,9 @@ function mkRevealLink(label: string, filePath: string): HTMLElement {
 
 async function fetchSize(filePath: string): Promise<number | null> {
   try {
-    const res = await fetch(
-      `/api/serve?path=${encodeURIComponent(filePath)}`,
-      { method: 'HEAD' },
-    )
+    const res = await fetch(`/api/serve?path=${encodeURIComponent(filePath)}`, {
+      method: 'HEAD',
+    })
     const cl = res.headers.get('content-length')
     return cl ? parseInt(cl) : null
   } catch {
@@ -338,9 +338,8 @@ function toggleSettings() {
 }
 
 function getSettings(): Settings {
-  const unit = (
-    document.getElementById('webmBitrateUnit') as HTMLSelectElement
-  ).value
+  const unit = (document.getElementById('webmBitrateUnit') as HTMLSelectElement)
+    .value
   const val =
     parseInt(
       (document.getElementById('webmBitrateVal') as HTMLInputElement).value,
@@ -365,31 +364,32 @@ function getSettings(): Settings {
 }
 
 function onBitrateUnitChange() {
-  const unit = (
-    document.getElementById('webmBitrateUnit') as HTMLSelectElement
-  ).value
+  const unit = (document.getElementById('webmBitrateUnit') as HTMLSelectElement)
+    .value
   ;(document.getElementById('webmBitrateVal') as HTMLInputElement).disabled =
     unit === ''
 }
 
-;(
-  document.getElementById('genMp4') as HTMLInputElement
-).addEventListener('change', (e: Event) => {
-  document.getElementById('sgMp4')!.style.opacity = (
-    e.target as HTMLInputElement
-  ).checked
-    ? '1'
-    : '.3'
-})
-;(
-  document.getElementById('genWebm') as HTMLInputElement
-).addEventListener('change', (e: Event) => {
-  document.getElementById('sgWebm')!.style.opacity = (
-    e.target as HTMLInputElement
-  ).checked
-    ? '1'
-    : '.3'
-})
+;(document.getElementById('genMp4') as HTMLInputElement).addEventListener(
+  'change',
+  (e: Event) => {
+    document.getElementById('sgMp4')!.style.opacity = (
+      e.target as HTMLInputElement
+    ).checked
+      ? '1'
+      : '.3'
+  },
+)
+;(document.getElementById('genWebm') as HTMLInputElement).addEventListener(
+  'change',
+  (e: Event) => {
+    document.getElementById('sgWebm')!.style.opacity = (
+      e.target as HTMLInputElement
+    ).checked
+      ? '1'
+      : '.3'
+  },
+)
 document
   .getElementById('removeAudio')!
   .addEventListener('change', () => updateAudioMute())
@@ -480,7 +480,9 @@ const timeDisplay = document.getElementById('timeDisplay')!
 function fmtTime(s: number): string {
   if (!s || isNaN(s)) return '0:00'
   const m = Math.floor(s / 60)
-  const sec = Math.floor(s % 60).toString().padStart(2, '0')
+  const sec = Math.floor(s % 60)
+    .toString()
+    .padStart(2, '0')
   return `${m}:${sec}`
 }
 
@@ -572,7 +574,6 @@ scrubber.addEventListener('input', () => {
 
 toggleSettings()
 updateAudioMute()
-
 ;(async () => {
   try {
     const res = await fetch('/api/config')

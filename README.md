@@ -20,6 +20,12 @@ npm start
 
 Open [http://localhost:3333](http://localhost:3333).
 
+For development (file watchers for both server and frontend):
+
+```bash
+npm run dev
+```
+
 ## Usage
 
 1. Enter a directory path in the sidebar and press Enter — video files in that directory will appear in the list
